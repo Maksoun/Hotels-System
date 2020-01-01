@@ -1,0 +1,6 @@
+<aura:component description="SetReservationRecordType" implements ="force:lightningQuickActionWithoutHeader,force:hasRecordId,force:hasSObjectName">
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="sObjectName" type="String" />
+
+    <c:SwitchReservationRT recordId="{!v.recordId}" sObjectName="{!v.sObjectName}" recordTypeDevName="Reservation"/>
+</aura:component>

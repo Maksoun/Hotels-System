@@ -1,0 +1,31 @@
+<aura:component controller="ReservationRecordTypeSwitcher">
+
+    <aura:attribute name="headerName" type="String" default="Switch to Reservation"/>
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="recordTypeDevName" type="Id" />
+    <aura:attribute name="sObjectName" type="String" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <header class="slds-modal__header">
+        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{!v.headerName}</h2>
+    </header>
+    <div class="slds-modal__content slds-p-around_medium slds-align_absolute-center" id="modal-content-id-1">
+        <div class="rt-switch">
+            <lightning:spinner alternativeText="Loading" />
+        </div>
+    </div>
+    <aura:html tag="style">
+        .cuf-content {
+        padding: 0 0rem !important;
+        }
+        .slds-p-around--medium {
+        padding: 0rem !important;
+        }
+        .slds-modal__content{
+        overflow-y:hidden !important;
+        height:unset !important;
+        max-height:unset !important;
+        }
+    </aura:html>
+</aura:component>
