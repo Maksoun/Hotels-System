@@ -12,7 +12,7 @@ public with sharing class ReservationRecordTypeSwitcher {
             reservation.RecordTypeId = reservationRTId;
             update reservation;
         } catch (Exception exp) {
-            System.debug('ERROR on switching record type  ' + exp.getMessage());
+            System.debug('ERROR on switching record type ' + exp.getMessage());
         }
     }
 }

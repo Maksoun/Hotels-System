@@ -1,6 +1,6 @@
 public with sharing class IndexController {
 
-    private static List<String> getPicklistValues(String objName, String fieldName){
+    public static List<String> getPicklistValues(String objName, String fieldName){
         System.debug('objName ' + objName);
         System.debug('fieldName ' + fieldName);
         List<String> options = new List<String>();
@@ -106,7 +106,17 @@ public with sharing class IndexController {
             insert reservation;
         } catch (Exception exp) {
             System.debug('Error on reservation creation  ' + exp.getMessage());
-            throw new AuraHandledException('Unable to create reservation.  ' + exp.getMessage());
+            //Showing user-friendly error message
+            if (exp.getMessage().contains('FIELD_CUSTOM_VALIDATION_EXCEPTION')) {
+                String errorMessage = exp.getMessage();
+                Integer occurrence = errorMessage.indexOf('FIELD_CUSTOM_VALIDATION_EXCEPTION,') + 34;
+                errorMessage = errorMessage.mid(occurrence, errorMessage.length());
+                occurrence = errorMessage.lastIndexOf(':');
+                errorMessage = errorMessage.mid(0, occurrence);
+                throw new AuraHandledException(errorMessage);
+            } else {
+                throw new AuraHandledException('Unable to create reservation.  ' + exp.getMessage());
+            }
         }
     }
 
