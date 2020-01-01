@@ -1,0 +1,138 @@
+<aura:component controller="IndexController" description="IndexLightningComponent">
+
+    <aura:attribute name="optionsForRooms" type="List" default="[]"/>
+    <aura:attribute name="optionsForCities" type="List" default="[]"/>
+    <aura:attribute name="optionsForHotels" type="List" default="[]"/>
+    <aura:attribute name="optionsForDrinks" type="List" default="[]"/>
+    <aura:attribute name="selectedDrinksList" type="List" default="[]"/>
+
+    <aura:attribute name="selectedRoomId" type="String" default=""/>
+    <aura:attribute name="cityValue" type="String" default=""/>
+    <aura:attribute name="emailAddress" type="String" default=""/>
+    <aura:attribute name="firstName" type="String" default=""/>
+    <aura:attribute name="lastName" type="String" default=""/>
+    <aura:attribute name="selectedHotelId" type="String"/>
+    <aura:attribute name="internetValue" type="Boolean" default=""/>
+    <aura:attribute name="saunaValue" type="Boolean" default=""/>
+    <aura:attribute name="startDate" type="Date"/>
+    <aura:attribute name="endDate" type="Date"/>
+
+
+    <aura:attribute name="isBooked" type="Boolean" default="false"/>
+    <aura:attribute name="showSpinner" type="Boolean" default="true"/>
+    <aura:attribute name="roomIdToServices" type="Map"/>
+
+    <aura:attribute name="notificationMessage" type="String" default=""/>
+    <aura:attribute name="visibilityClass" type="String" default="slds-hide"/>
+    <aura:attribute name="notificationStyle" type="String" default="success"/>
+    <aura:attribute name="notificationIconStyle" type="String" default="success"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <div class="slds-page-header slds-page-header_record-home">
+        <div class="slds-page-header__row">
+            <div class="slds-page-header__col-title">
+                <div class="slds-media">
+                    <div class="slds-media__figure">
+                        <lightning:icon iconName="standard:event" alternativeText="Event" />
+                    </div>
+                    <div class="slds-media__body">
+                        <div class="slds-page-header__name">
+                            <div class="slds-page-header__name-title">
+                                <h1>
+                                    <span class="slds-page-header__title slds-truncate">Book a room</span>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="{!'slds-notify_container ' + v.visibilityClass}">
+            <div class="{!'slds-notify slds-notify_toast slds-theme_' + v.notificationStyle}" role="status">
+                <span class="slds-assistive-text">{!v.notificationStyle}</span>
+                <span class="{!'slds-icon_container slds-icon-utility-' + v.notificationIconStyle + ' slds-m-right_small slds-no-flex slds-align-top'}">
+                    <lightning:icon class="white-icon" iconName="{!'utility:' + v.notificationIconStyle}" size="small" alternativeText=""/>
+                </span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small ">{!v.notificationMessage}</h2>
+                </div>
+                <div class="slds-notify__close">
+                    <button class="slds-button slds-button_icon slds-button_icon-inverse" title="Close" onclick="{!c.closeNotification}">
+                        <lightning:icon class="white-icon" iconName="utility:close" size="small" alternativeText=""/>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="slds-page-header__row slds-page-header__row_gutters">
+            <div class="slds-page-header__col-details">
+                <ul class="slds-page-header__detail-row pageDetail">
+                    <li class="slds-page-header__detail-block myBlock">
+                        <h1 class="fontLarge">General information</h1>
+                        <div class="slds-form-element formStyle">
+                            <lightning:select label="City" aura:id="citySelect" value="{!v.cityValue}" onchange="{!c.onCityChange}">
+                                <aura:iteration items="{!v.optionsForCities}" var="option">
+                                    <option text="{!option.label}" value="{!option.id}" selected="{!option.selected}"/>
+                                </aura:iteration>
+                            </lightning:select>
+                        </div>
+
+                        <aura:if isTrue="{!v.cityValue}">
+                            <div class="slds-form-element formStyle">
+                                <lightning:select label="Hotel" value="{!v.selectedHotelId}" onchange="{!c.onHotelChange}">
+                                    <aura:iteration items="{!v.optionsForHotels}" var="option">
+                                        <option text="{!option.label}" value="{!option.id}" selected="{!option.selected}"/>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </div>
+                        </aura:if>
+
+                        <aura:if isTrue="{!and(v.selectedHotelId, v.selectedHotelId != '')}">
+                            <div class="slds-form-element formStyle">
+                                <lightning:select label="Room" value="{!v.selectedRoomId}" onchange="{!c.onRoomChange}">
+                                    <aura:iteration items="{!v.optionsForRooms}" var="option">
+                                        <option text="{!option.label}" value="{!option.id}" selected="{!option.selected}"/>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </div>
+                        </aura:if>
+                        <aura:if isTrue="{!and(v.selectedRoomId, v.selectedRoomId != '')}">
+                            <div class="slds-form-element formStyle">
+                                <lightning:input type="date" name="inputDateIn" label="Enter check in date" required="true" value="{!v.startDate}"/>
+                                <lightning:input type="date" name="inputDateOut" label="Enter check out date" required="true" value="{!v.endDate}"/>
+                            </div>
+
+                            <br/>
+                            <br/>
+                            <h1 class="fontLarge">Personal Information</h1>
+                            <div class="slds-form-element formStyle">
+                                <lightning:input type="email" required="true" value="{!v.emailAddress}" label="Email Address" />
+                                <lightning:input required="true" value="{!v.firstName}" label="First Name" />
+                                <lightning:input required="true" value="{!v.lastName}" label="Last Name" />
+                            </div>
+                            <br/>
+                            <br/>
+                            <h1 class="fontLarge">Additional services (included into your room reservation)</h1>
+                            <lightning:input disabled="true" type="checkbox" checked="{!v.internetValue}" label="Internet"/>
+                            <lightning:input disabled="true" type="checkbox" checked="{!v.saunaValue}" label="Sauna"/>
+                            <lightning:dualListbox sourceLabel="Not Available Drinks"
+                                                   selectedLabel="Included Drinks"
+                                                   options="{!v.optionsForDrinks}"
+                                                   disabled="true"
+                                                   value="{!v.selectedDrinksList}"
+                            />
+                            <br/>
+
+                            <lightning:button disabled="{!v.isBooked}" variant="brand" label="Book" title="Reservation action" onclick="{!c.handleClick}"/>
+                        </aura:if>
+                    </li>
+                </ul>
+            </div>
+            <aura:if isTrue="{!v.showSpinner}">
+                <lightning:spinner alternativeText="Loading" size="medium" />
+            </aura:if>
+        </div>
+    </div>
+
+</aura:component>

@@ -1,0 +1,15 @@
+<apex:page id="index" docType="html-5.0" sidebar="false" showHeader="false" lightningStylesheets="true">
+        <apex:includeLightning />
+        <div id="BcSecuritiesDiv"></div>
+
+        <script>
+                $Lightning.use("c:IndexApplication", function() {
+                        $Lightning.createComponent("c:IndexLightningComponent",
+                                {},
+                                "BcSecuritiesDiv",
+                                function(cmp) {
+                                        console.log('>>>>> App is hosted');
+                                });
+                });
+        </script>
+</apex:page>

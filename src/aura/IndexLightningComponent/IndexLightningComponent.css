@@ -1,0 +1,28 @@
+.THIS .formStyle {
+    width: 70%!important;
+}
+
+.THIS .slds-card__body {
+    padding: 10px;
+}
+
+.THIS .myBlock {
+    max-width: 40%!important;
+}
+
+.THIS .pageDetail {
+    display: block;
+}
+
+.THIS .fontLarge {
+    font-size: large;
+}
+
+.THIS .white-icon svg {
+    fill: white;
+}
+
+.THIS .slds-notify.slds-notify_toast.slds-theme_success {
+    color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(4, 132, 75, 0.94);
+}
